@@ -21,8 +21,8 @@ OllamaClient::OllamaClient(
 OllamaClient::OllamaClient(){
     base_url = "http://localhost:11434"; 
     model = "llama3.2:latest";
-    temperature = 0.7;
-    max_tokens = 256;
+    temperature = 0.7; // số này tùy chỉnh
+    max_tokens = 256; // tùy
 }
 string OllamaClient::getUrl(){
     return base_url;
@@ -36,7 +36,7 @@ double OllamaClient::getTemp(){
 int OllamaClient::getTokens(){
     return max_tokens;
 }
-size_t WriteCallback(
+size_t WriteCallback( // libcurl bắt phải có hàm này để viết response, ko cần hiểu logic lắm đâu
     void* contents,   
     size_t size,
     size_t nmemb,
@@ -51,18 +51,21 @@ size_t WriteCallback(
 
     return totalSize;
 }
-nlohmann::json OllamaClient::chat(
-    const nlohmann::json& messages
+nlohmann::json OllamaClient::chat( // nói chuyện với AI
+    const nlohmann::json& messages // lấy tham số là tin nhắn của mình
 ){
     string answer;
     nlohmann::json request;
+
+    // setup mẫu request mình cần gửi để AI hiểu dc yêu cầu
     request["model"] = model;
     request["messages"] = messages;
     request["stream"] = false;
     request["options"]["temperature"] = temperature;
     request["options"]["num_predict"] = max_tokens;
-
     string body = request.dump();
+
+    // bắt đầu gửi request 
     CURL* curl = curl_easy_init();
 
     if (curl == NULL) {
@@ -79,7 +82,7 @@ nlohmann::json OllamaClient::chat(
 
     CURLcode res = curl_easy_perform(curl);
 
-    if (res != CURLE_OK) {
+    if (res != CURLE_OK) { // check exception
         cerr << "Request failed: "
             << curl_easy_strerror(res) << endl;
 
@@ -89,6 +92,7 @@ nlohmann::json OllamaClient::chat(
 
     curl_easy_cleanup(curl);
 
+    // đã có câu trả lời từ AI
     nlohmann::json response = nlohmann::json::parse(answer);
     return response;
 }
@@ -99,8 +103,10 @@ int main() {
     OllamaClient client;
 
     cout << "Bắt đầu cuộc trò chuyện..." << endl;
-    while (true){
-
+    while (true){ // vòng lặp trò chuyện với AI chạy đến khi người dùng thoát
+        // à mà tuy nói là chat đến khi thoát ra nhưng AI hiện tại chưa biết ghi nhớ
+        // tức là hỏi câu nào thì trả lời mỗi câu đấy thôi xong nó quên sạch mọi thứ
+        
         cout << "1. Trò chuyên với AI" << endl;
         cout << "2. Thoát" << endl;
         cout << "Lựa chọn của bạn: " << endl;

@@ -1,0 +1,31 @@
+# Build files
+build/
+bin/
+obj/
+*.exe
+*.obj
+*.o
+*.dll
+*.lib
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.user
+
+# VS Code
+.vscode/
+
+# Temporary files
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Sensitive configuration
+.env
+.env.*
+!.env.example
