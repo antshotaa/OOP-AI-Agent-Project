@@ -2,21 +2,32 @@
 
 ## 1. Introduction
 
-This project is an AI Agent Framework developed in C++17 as an Object-Oriented Programming (OOP) course project.
+AI Agent Framework is a C++17 project developed as part of an Object-Oriented Programming (OOP) course.
 
-The framework connects to a locally hosted Large Language Model (LLM) through the Ollama API and provides an extensible tool system that allows the AI Agent to interact with external functionalities.
+The project aims to build a simplified AI Agent framework from scratch, inspired by existing frameworks such as LangChain and OpenClaw.
 
-The main goal is to understand and implement the fundamental architecture of an AI Agent framework from scratch using C++.
+It connects to locally hosted Large Language Models (LLMs) through the Ollama API and provides an extensible tool system that allows an AI Agent to interact with external functionalities.
+
+Unlike a traditional chatbot that only generates text, an AI Agent can identify when a tool is needed, request its execution, and use the returned results to generate a response.
+
+The main objective is to understand the fundamental architecture and implementation of an AI Agent using C++ and Object-Oriented Programming principles.
 
 ## 2. Features
 
-- **LLM Client:** Communicate with locally hosted language models through the Ollama API.
-- **Tool System:** Provide an extensible architecture for defining and executing tools.
-- **Calculator Tool:** Perform mathematical calculations through the Agent.
-- **Tool Registry:** Manage and retrieve registered tools.
-- **Error Handling:** Handle API connection errors, invalid responses, and tool execution errors.
+The project is being developed incrementally. The current implementation includes the following components:
 
-*(Update this list according to the features actually implemented.)*
+- **LLM Client:** Communicate with locally hosted language models through the Ollama API using HTTP requests.
+- **Tool Interface:** Define a common interface for different tools, allowing them to be implemented and executed through a unified structure.
+- **Calculator Tool:** Evaluate mathematical expressions.
+- **Tool Registry:** Register and retrieve available tools by their names.
+- **JSON Processing:** Parse API requests and responses using nlohmann/json.
+- **Error Handling:** Handle API connection errors, invalid JSON responses, and tool execution errors.
+
+### In Progress
+
+- **Agent Loop:** Implement the execution cycle that connects the LLM, Tool Registry, and individual tools.
+- **Tool Execution:** Execute tools requested by the LLM and return their results to the model.
+- **Multi-tool Support:** Allow the Agent to handle multiple tool calls within an interaction.
 
 ## 3. Technologies
 
@@ -24,110 +35,241 @@ The main goal is to understand and implement the fundamental architecture of an 
 |---|---|
 | C++17 | Main programming language |
 | Ollama | Local LLM runtime |
-| libcurl | HTTP communication |
+| llama3.2 | Language model |
+| libcurl | HTTP communication with Ollama |
 | nlohmann/json | JSON parsing and manipulation |
+| CMake | Build system |
+| vcpkg | C++ dependency management |
+| Visual Studio Build Tools | MSVC compiler |
 | Visual Studio Code | Development environment |
 
 ## 4. Project Structure
 
+The project is organized into separate modules to improve maintainability and extensibility.
+
 ```text
-Agent/
+Agent_25120015/
+│
 ├── src/
-│   ├── client/       # Ollama API communication
-│   ├── tools/        # Tool implementations
-│   ├── core/         # Agent core logic
-│   └── main.cpp      # Program entry point
-├── include/          # Header files
-├── tests/            # Unit tests
-├── docs/             # Project documentation
-├── build/            # Build output
-└── README.md
+│   ├── client/
+│   │   ├── ollama_client.h
+│   │   └── ollama_client.cpp
+│   │
+│   ├── tools/
+│   │   ├── tool.h
+│   │   ├── calc_tool.h
+│   │   ├── calc_tool.cpp
+│   │   ├── tool_registry.h
+│   │   └── tool_registry.cpp
+│   │
+│   ├── core/
+│   │   └── (Agent implementation)
+│   │
+│   └── main.cpp
+│
+├── tests/
+│
+├── docs/
+│
+├── .vscode/
+│
+├── CMakeLists.txt
+├── README.md
+└── .gitignore
 ```
 
-*(Adjust the directory structure to match the actual project.)*
+*Note: This is a logical representation of the project architecture. Update the tree to match the actual file locations in the repository.*
+
+### Main Components
+
+- **OllamaClient:** Responsible for sending requests to the Ollama API and receiving model responses.
+- **Tool:** Defines the common interface that all tools must implement.
+- **Calculator:** Implements mathematical expression evaluation.
+- **ToolRegistry:** Manages available tools and provides access to them.
+- **Agent:** Coordinates communication between the LLM and available tools through the Agent Loop.
 
 ## 5. Requirements
 
-Before running the project, make sure you have:
+Before building the project, make sure the following software is installed:
 
-- A C++17 compatible compiler.
-- [Ollama](https://ollama.com/) installed.
-- libcurl.
-- nlohmann/json.
-- At least one compatible LLM model downloaded.
+- Windows 10 or later.
+- Visual Studio 2022 Build Tools with the C++ workload.
+- CMake 3.20 or later.
+- Git.
+- vcpkg.
+- Ollama.
+- A compatible LLM model.
 
 ## 6. Installation and Setup
 
-### Step 1: Install dependencies
+### Step 1: Clone the repository
 
-Install Ollama, libcurl, and nlohmann/json.
+```bash
+git clone <YOUR_REPOSITORY_URL>
+cd Agent_25120015
+```
 
-### Step 2: Download an LLM model
+### Step 2: Install dependencies
 
-For example:
+This project uses vcpkg to manage C++ dependencies.
+
+Install the required libraries:
+
+```powershell
+vcpkg install curl:x64-windows
+vcpkg install nlohmann-json:x64-windows
+```
+
+Make sure that vcpkg is installed and available at:
+
+```text
+C:/vcpkg
+```
+
+If vcpkg is installed in another location, adjust the paths in the following commands accordingly.
+
+### Step 3: Install and configure Ollama
+
+Download and install Ollama from:
+
+https://ollama.com/
+
+Download the model:
 
 ```bash
 ollama pull llama3.2
 ```
 
-### Step 3: Start Ollama
+Start the Ollama service:
 
 ```bash
 ollama serve
 ```
 
-Make sure the Ollama API is accessible at:
+The default API endpoint is:
 
 ```text
 http://localhost:11434
 ```
 
-### Step 4: Build the project
+Make sure Ollama is running before launching the application.
 
-Compile the source files using a C++17 compatible compiler and link the required dependencies.
+### Step 4: Configure the project using CMake
 
-### Step 5: Run
+Open a terminal in the project root directory and run:
 
-Execute the generated program.
+```powershell
+cmake -S . -B build-vcpkg `
+  -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
+  -DVCPKG_TARGET_TRIPLET=x64-windows
+```
+
+This command configures the project using CMake and tells it to locate dependencies through vcpkg.
+
+### Step 5: Build the project
+
+Compile the project in Debug mode:
+
+```powershell
+cmake --build build-vcpkg --config Debug
+```
+
+After a successful build, the executable will be generated at:
+
+```text
+build-vcpkg/Debug/OllamaTest.exe
+```
+
+### Step 6: Run the application
+
+Run the executable:
+
+```powershell
+.\build-vcpkg\Debug\OllamaTest.exe
+```
 
 ## 7. Usage
 
-Launch the application and follow the instructions displayed in the terminal.
+After launching the application, users can interact with the locally hosted LLM through the terminal.
 
-The user can interact with the AI Agent through natural language.
+The framework is designed to allow the Agent to use registered tools when necessary.
 
-When a supported tool is available, the Agent can use it to perform the corresponding operation.
+### Example: Calculator Tool
 
-Example:
+User input:
 
 ```text
-User: What is 25 * 4 + 10?
-
-Agent: 110
+Calculate 123 * 456
 ```
 
-## 8. OOP Concepts
+Expected tool call from the LLM:
 
-This project applies several Object-Oriented Programming concepts:
+```json
+{
+    "name": "Calculator",
+    "arguments": {
+        "expression": "123*456"
+    }
+}
+```
+Expected calculation result:
 
-- **Encapsulation:** Organize data and related operations within classes.
-- **Inheritance:** Define specialized tools based on a common Tool interface.
-- **Polymorphism:** Allow different tools to be executed through a common interface.
-- **Abstraction:** Separate the Agent, LLM Client, and Tool implementation layers.
+```text
+56088
+```
+
+*Note: The LLM tool-call request and Calculator implementation are available. The complete Agent Loop, which executes the requested tool and sends its result back to the LLM for a final response, is still under development.*
+
+## 8. Object-Oriented Programming Concepts
+
+This project applies the following OOP principles:
+
+### Encapsulation
+
+Each component encapsulates its own data and operations.
+
+For example, `OllamaClient` handles API communication, while `Calculator` handles mathematical expression evaluation.
+
+### Inheritance
+
+Different tools inherit from a common `Tool` interface, allowing them to share a consistent structure.
+
+### Polymorphism
+
+Different tool implementations can be accessed and executed through a common interface.
+
+For example, the Agent can work with a `Tool` pointer without needing to know the concrete implementation of each tool.
+
+### Abstraction
+
+The framework separates the main responsibilities into independent components:
+
+- LLM communication.
+- Tool definitions and implementations.
+- Tool management.
+- Agent execution and decision-making.
+
+This separation makes the framework easier to maintain and extend.
 
 ## 9. Future Improvements
 
-- Support more tools.
-- Improve tool selection and execution.
-- Support multimodal inputs.
+The following features are planned for future development:
+
+- Complete the Agent Loop and tool execution workflow.
+- Support multiple tool calls in a single interaction.
+- Implement additional tools such as web search and file operations.
+- Improve conversation history management.
+- Support multimodal inputs, including images.
 - Improve error handling and logging.
-- Add more comprehensive unit tests.
+- Add unit tests and integration tests.
+- Improve the Agent's ability to handle complex tasks.
 
-## 10. Authors
+## 10. Author
 
-- Student ID: [Your Student ID]
-- Name: [Your Name]
+**Name:** Nguyễn Thành An
+
+**Student ID:** 25120015
 
 ## 11. License
 
-This project was developed for educational purposes as part of an OOP course.
+This project was developed for educational purposes as part of an Object-Oriented Programming course.

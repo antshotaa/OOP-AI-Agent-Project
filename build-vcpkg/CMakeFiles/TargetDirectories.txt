@@ -1,0 +1,3 @@
+C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/build-vcpkg/CMakeFiles/OllamaTest.dir
+C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/build-vcpkg/CMakeFiles/ALL_BUILD.dir
+C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/build-vcpkg/CMakeFiles/ZERO_CHECK.dir

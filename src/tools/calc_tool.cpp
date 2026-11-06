@@ -15,7 +15,7 @@ string Calculator::description() const{
 }
 
 
-nlohmann::json Calculator::exec(nlohmann::json& args) const{ // thuc hien tinh toan
+nlohmann::json Calculator::exec(nlohmann::json& args) { // thuc hien tinh toan
     string expression = args.at("expression").get<string>();
     if (expression.empty()){
         return {{"error","Biểu thức rỗng."}};

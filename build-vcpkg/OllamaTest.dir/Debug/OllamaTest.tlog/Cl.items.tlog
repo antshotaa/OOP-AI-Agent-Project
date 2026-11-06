@@ -1,0 +1,10 @@
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\agent\agent_loop.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\agent_loop.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\agent\loop_detector.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\loop_detector.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\agent\skill_loader.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\skill_loader.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\client\ollama_client.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\ollama_client.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\harness\harness_runner.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\harness_runner.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\harness\placeholder_evaluator.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\placeholder_evaluator.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\harness\trajectory.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\trajectory.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\main.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\main.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\tools\calc_tool.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\calc_tool.obj
+C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\tools\tool_registry.cpp;C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\OllamaTest.dir\Debug\tool_registry.obj

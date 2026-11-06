@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\build-vcpkg\CMakeFiles\f9e9d666316b990cf6027cd394910a39\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{35833572-FB5B-3494-8CC7-802A29D47FE5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

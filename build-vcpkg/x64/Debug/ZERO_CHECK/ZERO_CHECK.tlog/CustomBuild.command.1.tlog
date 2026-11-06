@@ -1,0 +1,10 @@
+^C:\USERS\TRAN THI HONG THAM\DOWNLOADS\DOANGAMING\AGENT_25120015\BUILD-VCPKG\CMAKEFILES\F9E9D666316B990CF6027CD394910A39\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015" "-BC:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/build-vcpkg" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/build-vcpkg/OllamaTest.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

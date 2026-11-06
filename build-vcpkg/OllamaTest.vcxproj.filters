@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\agent\agent_loop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\agent\loop_detector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\agent\skill_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\client\ollama_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\harness\harness_runner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\harness\placeholder_evaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\harness\trajectory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\tools\calc_tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\tools\tool_registry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="C:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_json.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E5BC2ED0-9E35-3817-AE5B-50848365E834}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
