@@ -2,21 +2,20 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <iostream>
-#include <stack>
 
 #define MAX_SIZE 1000
 using namespace std;
 
-string Calculator::name(){
+string Calculator::name() const{
     return "Calculator";
 }
 
-string Calculator::description(){
+string Calculator::description() const{
     return "Calculate mathematical expression.";
 }
 
 
-nlohmann::json Calculator::exec(nlohmann::json& args){ // thuc hien tinh toan
+nlohmann::json Calculator::exec(nlohmann::json& args) const{ // thuc hien tinh toan
     string expression = args.at("expression").get<string>();
     if (expression.empty()){
         return {{"error","Biểu thức rỗng."}};
@@ -112,18 +111,29 @@ nlohmann::json Calculator::exec(nlohmann::json& args){ // thuc hien tinh toan
     };
 }
 
-
-
-int main() {
-    Calculator calc;
-
-    nlohmann::json args = {
-        {"expression", " "}
+nlohmann::json Calculator::parameters() const {
+    return {
+        {"type", "object"},
+        {"properties", {
+            {"expression", {
+                {"type", "string"},
+                {"description", "Mathematical expression to calculate"}
+            }}
+        }},
+        {"required", {"expression"}}
     };
-
-    nlohmann::json result = calc.exec(args);
-
-    cout << result.dump(4) << endl;
-
-    return 0;
 }
+
+// int main() { // hàm main này để test calculator
+//     Calculator calc;
+
+//     nlohmann::json args = {
+//         {"expression", " "}
+//     };
+
+//     nlohmann::json result = calc.exec(args);
+
+//     cout << result.dump(4) << endl;
+
+//     return 0;
+// }

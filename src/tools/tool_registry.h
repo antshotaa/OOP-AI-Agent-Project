@@ -1,14 +1,12 @@
 #pragma once
-#include <tool.h>
-#include <calc_tool.h>
+#include "tool.h"
+#include <memory>
+#include <vector>
 class ToolRegistry {
 private:
-    Calculator calc;
+    vector<unique_ptr<Tool>> tools;
 public:
-    Tool* getTool(string name){
-        if (name == "Calculator"){
-            return &calc;
-        }
-        return NULL;
-    }
+    bool registerTool(unique_ptr<Tool> tool);
+    Tool* getTool(const string& name);
+    nlohmann::json getToolDefinitions() const;
 };

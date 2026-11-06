@@ -4,6 +4,9 @@
 #include <windows.h>
 #include <curl/curl.h>
 #include "ollama_client.h"
+#include "../tools/tool_registry.h"
+#include "../tools/calc_tool.h"
+#include <memory>
 
 using namespace std;
 
@@ -52,7 +55,8 @@ size_t WriteCallback( // libcurl bắt phải có hàm này để viết respons
     return totalSize;
 }
 nlohmann::json OllamaClient::chat( // nói chuyện với AI
-    const nlohmann::json& messages // lấy tham số là tin nhắn của mình
+    const nlohmann::json& messages, // lấy tham số là tin nhắn của mình
+    const nlohmann::json& tools
 ){
     string answer;
     nlohmann::json request;
@@ -61,6 +65,7 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
     request["model"] = model;
     request["messages"] = messages;
     request["stream"] = false;
+    request["tools"] = tools;
     request["options"]["temperature"] = temperature;
     request["options"]["num_predict"] = max_tokens;
     string body = request.dump();
@@ -69,7 +74,7 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
     CURL* curl = curl_easy_init();
 
     if (curl == NULL) {
-        return "";
+        return {"error", "Không thể khởi tạo CURL."};
     }
 
     string url = base_url + "/api/chat";
@@ -87,7 +92,7 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
             << curl_easy_strerror(res) << endl;
 
         curl_easy_cleanup(curl);
-        return "";
+        return {"error", curl_easy_strerror(res)};
     }
 
     curl_easy_cleanup(curl);
@@ -125,7 +130,11 @@ int main() {
             });
 
             cout << "Đang gửi tin nhắn..." << endl;
-            nlohmann::json answer = client.chat(messages);
+            ToolRegistry registry;
+            registry.registerTool(make_unique<Calculator>());
+            nlohmann::json tools = registry.getToolDefinitions();
+
+            nlohmann::json answer = client.chat(messages,tools);
 
             cout << "Câu trả lời của AI: " << endl;
             cout << answer << endl;

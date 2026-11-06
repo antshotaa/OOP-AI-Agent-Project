@@ -12,7 +12,10 @@ private:
 public: 
     OllamaClient();
     OllamaClient(string url, string m, double temp, int tok);
-    nlohmann::json chat(const nlohmann::json& messages) override;
+    nlohmann::json chat(
+        const nlohmann::json& messages,
+        const nlohmann::json& tools
+    ) override;
     string getUrl();
     string getModel();
     double getTemp();
