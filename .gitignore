@@ -10,7 +10,7 @@ cmake-build-*/
 *.o
 *.lib
 *.pdb
-*.ilk
+*.ilkS
 
 # CMake generated files
 CMakeFiles/
@@ -20,6 +20,7 @@ compile_commands.json
 
 # Visual Studio
 .vs/
+.vscode/
 
 # IDE temporary files
 *.user
