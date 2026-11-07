@@ -1,31 +1,33 @@
-# Build files
+# Build directories
 build/
-bin/
-obj/
+build-vcpkg/
+cmake-build-*/
+
+# Compiled files
 *.exe
+*.dll
 *.obj
 *.o
-*.dll
 *.lib
+*.pdb
+*.ilk
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
 
 # Visual Studio
 .vs/
-*.sln
-*.vcxproj
-*.vcxproj.user
 
-# VS Code
-.vscode/
+# IDE temporary files
+*.user
+*.suo
 
-# Temporary files
+# Logs
 *.log
-*.tmp
 
 # OS files
 .DS_Store
 Thumbs.db
-
-# Sensitive configuration
-.env
-.env.*
-!.env.example
