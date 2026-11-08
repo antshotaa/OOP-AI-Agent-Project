@@ -1,4 +1,5 @@
 #include "agent_loop.h"
+#include <iostream>
 
 AgentLoop::AgentLoop(LLMClient& client, ToolRegistry& registry, int maxSteps) 
         : client(client), registry(registry), maxSteps(maxSteps)
@@ -15,8 +16,10 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
         nlohmann::json tools = registry.getToolDefinitions();
 
         nlohmann::json response = client.chat(history,tools);
-
-        if (response["messages"].contains("tool_calls") && !response["message"]["tool_calls"].empty()) 
+        cout << "DEBUG response: " << response.dump(4) << endl;
+        if (response.contains("message") && 
+            response["message"].contains("tool_calls") && 
+            !response["message"]["tool_calls"].empty()) 
         // check nếu có gọi tools thì sẽ thực thi tools
         {
             history.push_back(response["message"]); // thêm phản hồi của AI vào history trước
@@ -36,6 +39,9 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                 Tool* tool = registry.getTool(toolName);
                 nlohmann::json result;
                 if (tool) result = tool->exec(arguments);
+                else {
+                    cout << "Không tìm thấy tool: " << toolName << endl;
+                }
                 history.push_back({
                     {"role", "tool"},
                     {"content", result.dump()}
@@ -43,6 +49,7 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
             }
         }
         else {
+            cout << "DEBUG message: " << response["message"].dump(4) << endl;
             return response["message"]["content"];
         }
     }

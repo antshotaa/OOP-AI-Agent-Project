@@ -95,9 +95,9 @@ nlohmann::json Calculator::exec(nlohmann::json& args) { // thuc hien tinh toan
             else ops[i] = '+';
         }
     }
-    for (int i = 0; i < p1; i++) {
-        cout << "nums[" << i << "] = " << nums[i] << endl;
-    }
+    // for (int i = 0; i < p1; i++) {
+    //     cout << "nums[" << i << "] = " << nums[i] << endl;
+    // }
     if (p1 > 0) result += nums[0];
     for (int i = 0; i < p1 - 1; i++){
         if (ops[i] == '+'){
