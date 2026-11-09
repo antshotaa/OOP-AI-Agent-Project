@@ -14,13 +14,49 @@ string Calculator::description() const{
     return "Calculate mathematical expression.";
 }
 
+bool isValidExpression(const string& s) {
+    bool expectNumber = true;
+    bool hasNumber = false;
+    bool negative = false;
+
+    for (int i = 0; i < s.size(); i++) {
+        char c = s[i];
+        if (c == ' ') continue;
+        if (expectNumber) {
+            if (c == '-' && !negative) {
+                negative = true;
+                continue;
+            }
+            if (c < '0' || c > '9') return false;
+            while (i + 1 < s.size() &&
+                   s[i + 1] >= '0' &&
+                   s[i + 1] <= '9') {
+                i++;
+            }
+
+            expectNumber = false;
+            negative = false;
+            hasNumber = true;
+        }
+        else {
+            if (c != '+' && c != '-' &&
+                c != '*' && c != '/') {
+                return false;
+            }
+            expectNumber = true;
+        }
+    }
+    return hasNumber && !expectNumber;
+}
 
 nlohmann::json Calculator::exec(nlohmann::json& args) { // thuc hien tinh toan
     string expression = args.at("expression").get<string>();
     if (expression.empty()){
         return {{"error","Biểu thức rỗng."}};
     }
-    
+    if (!isValidExpression(expression)){
+        return {{"error","Biểu thức không hợp lệ."}};
+    }
     int n = expression.size();
     long long nums[MAX_SIZE];
     char ops[MAX_SIZE];
@@ -34,9 +70,6 @@ nlohmann::json Calculator::exec(nlohmann::json& args) { // thuc hien tinh toan
             n--;
             continue;
         }
-        if (expression[i] < '0' || 
-            expression[i] > '9') 
-            return {{"error", "Biểu thức không hợp lệ."}};
         else break;
     }
     for (int i = 0; i < n; i++){

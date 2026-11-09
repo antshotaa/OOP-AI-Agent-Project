@@ -1,4 +1,5 @@
 #include "agent_loop.h"
+#include "loop_detector.h"
 #include <iostream>
 
 AgentLoop::AgentLoop(LLMClient& client, ToolRegistry& registry, int maxSteps) 
@@ -12,11 +13,14 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
         {"role", "user"},
         {"content", userInput}
     });
+    LoopDetector loopDetector;
     for (int step = 0; step < maxSteps; step++){ // các step bao gồm thực thi tool, trả về kết quả cho user
         nlohmann::json tools = registry.getToolDefinitions();
 
         nlohmann::json response = client.chat(history,tools);
-        cout << "DEBUG response: " << response.dump(4) << endl;
+
+        cout << "DEBUG response: " << response.dump(4) << endl; // dùng cho việc debug
+
         if (response.contains("message") && 
             response["message"].contains("tool_calls") && 
             !response["message"]["tool_calls"].empty()) 
@@ -35,13 +39,24 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                 string toolName = calls[call_number]["function"]["name"];
                 nlohmann::json arguments = calls[call_number]["function"]["arguments"];
 
+                if (loopDetector.isLoop(toolName,arguments)){ // check vòng lặp vô hạn
+                    return "Phát hiện có vòng lặp. Ngừng thực thi.";
+                }
                 // chạy tools
                 Tool* tool = registry.getTool(toolName);
+
                 nlohmann::json result;
+
                 if (tool) result = tool->exec(arguments);
                 else {
-                    cout << "Không tìm thấy tool: " << toolName << endl;
+                    return "Không tìm thấy tool: " + toolName;
                 }
+
+                if (result.contains("error")) { 
+                    // biểu thực ko hợp lệ sẽ báo lỗi luôn thay vì để AI tự tính
+                    return "Không thể thực hiện phép tính: " + result["error"].get<string>();
+                }
+                // cout << "DEBUG tool result: " << result.dump(4) << endl;
                 history.push_back({
                     {"role", "tool"},
                     {"content", result.dump()}
@@ -49,7 +64,7 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
             }
         }
         else {
-            cout << "DEBUG message: " << response["message"].dump(4) << endl;
+            cout << "DEBUG message: " << response["message"].dump(4) << endl; // dùng cho việc debug
             return response["message"]["content"];
         }
     }
