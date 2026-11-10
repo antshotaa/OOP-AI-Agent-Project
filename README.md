@@ -23,12 +23,42 @@ The project is being developed incrementally. The current implementation include
 - **JSON Processing:** Parse API requests and responses using nlohmann/json.
 - **Error Handling:** Handle API connection errors, invalid JSON responses, and tool execution errors.
 
-### In Progress
+## In Progress
 
-- **Agent Loop:** Implement the execution cycle that connects the LLM, Tool Registry, and individual tools.
-- **Tool Execution:** Execute tools requested by the LLM and return their results to the model.
-- **Multi-tool Support:** Allow the Agent to handle multiple tool calls within an interaction.
+The following features and improvements are currently under development:
 
+- **Agent Loop Improvements**
+  - Improve error handling for invalid LLM responses and failed tool executions.
+  - Handle unknown tools gracefully without prematurely terminating the agent loop.
+  - Improve conversation history management for tool calls and tool responses.
+  - Ensure reliable execution of multiple tool calls within a single interaction.
+
+- **Loop Detection**
+  - Refine loop detection logic to identify repetitive tool calls.
+  - Implement and validate both generic repeat and ping-pong loop detection.
+  - Improve loop detection thresholds and termination handling.
+
+- **Additional Tools**
+  - Implement additional tools to expand the agent's capabilities.
+  - Ensure at least five functional tools are available through the Tool Registry.
+
+- **Skill System**
+  - Implement `SkillLoader` to load Markdown skill files from the `skills/` directory.
+  - Add keyword-based skill selection.
+  - Inject relevant skill instructions into the system prompt before each agent run.
+  - Develop at least three custom skill files.
+
+- **Harness & Evaluation**
+  - Implement `HarnessRunner` to manage agent execution and evaluation.
+  - Add trajectory recording for agent execution steps.
+  - Implement `KeywordEvaluator` and `FunctionalEvaluator`.
+  - Develop benchmark tasks and support batch evaluation with JSON output.
+
+- **Testing & Reliability**
+  - Expand unit and integration tests.
+  - Improve HTTP error handling, timeout configuration, and JSON response validation in `OllamaClient`.
+  - Test agent behavior across normal execution, tool failures, invalid responses, and loop detection scenarios.
+  
 ## 3. Technologies
 
 | Technology | Purpose |

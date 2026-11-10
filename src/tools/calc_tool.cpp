@@ -11,7 +11,9 @@ string Calculator::name() const{
 }
 
 string Calculator::description() const{
-    return "Calculate mathematical expression.";
+    return "Evaluate mathematical expressions involving numbers and arithmetic operators. "
+           "Use this tool only when the user explicitly asks to calculate or solve a mathematical expression. "
+           "NEVER use this tool for general questions, factual questions, or questions that do not require calculation.";
 }
 
 bool isValidExpression(const string& s) {

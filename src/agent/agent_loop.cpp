@@ -14,7 +14,7 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
         {"content", userInput}
     });
     LoopDetector loopDetector;
-    for (int step = 0; step < maxSteps; step++){ // các step bao gồm thực thi tool, trả về kết quả cho user
+    for (int step = 0; step < maxSteps; step++){ // mỗi step là 1 lần gọi llm
         nlohmann::json tools = registry.getToolDefinitions();
 
         nlohmann::json response = client.chat(history,tools);
@@ -51,19 +51,19 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                 else {
                     return "Không tìm thấy tool: " + toolName;
                 }
-
-                if (result.contains("error")) { 
-                    // biểu thực ko hợp lệ sẽ báo lỗi luôn thay vì để AI tự tính
-                    return "Không thể thực hiện phép tính: " + result["error"].get<string>();
-                }
                 // cout << "DEBUG tool result: " << result.dump(4) << endl;
                 history.push_back({
                     {"role", "tool"},
+                    {"tool_name", toolName},
                     {"content", result.dump()}
                 });
             }
         }
         else {
+            if (!response.contains("message") ||
+                !response["message"].is_object()) {
+                return "Phản hồi từ LLM không hợp lệ.";
+            }
             cout << "DEBUG message: " << response["message"].dump(4) << endl; // dùng cho việc debug
             return response["message"]["content"];
         }

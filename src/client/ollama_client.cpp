@@ -21,9 +21,9 @@ OllamaClient::OllamaClient(
 }
 OllamaClient::OllamaClient(){
     base_url = "http://localhost:11434"; 
-    model = "llama3.2:latest";
-    temperature = 0.7; // số này tùy chỉnh
-    max_tokens = 1024; // tùy
+    model = "qwen2.5:3b";
+    temperature = 0.2; // số này tùy chỉnh
+    max_tokens = 512; // tùy
 }
 string OllamaClient::getUrl(){
     return base_url;
@@ -79,7 +79,8 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_POST, 1);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
-
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 120L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &answer);
 
@@ -96,6 +97,13 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
     curl_easy_cleanup(curl);
 
     // đã có câu trả lời từ AI
-    nlohmann::json response = nlohmann::json::parse(answer);
-    return response;
+    try {
+        nlohmann::json response = nlohmann::json::parse(answer);
+        return response;
+    }
+    catch (const nlohmann::json::parse_error& e) {
+        return {
+            {"error", string("JSON parse error: ") + e.what()}
+        };
+    }
 }
