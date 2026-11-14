@@ -29,7 +29,6 @@ OllamaClient::OllamaClient(){
         model = "qwen3.8:27b";
     #endif
 
-
     temperature = 0.7; // số này tùy chỉnh
     max_tokens = 2048; // tùy
 }
