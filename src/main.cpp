@@ -6,7 +6,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 #include "client/ollama_client.h"
 #include "tools/tool.h"
@@ -30,8 +32,10 @@ string loadSystemPrompt(const string& filePath) {
 
 
 int main() {
+    #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8); // có 2 dòng này thì mới in ra tiếng việt có dấu dc 
     SetConsoleCP(CP_UTF8);
+    #endif
     cout << "Bắt đầu chương trình..." << endl;
     // khởi tạo ollama
     OllamaClient client;

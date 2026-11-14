@@ -21,9 +21,17 @@ OllamaClient::OllamaClient(
 }
 OllamaClient::OllamaClient(){
     base_url = "http://localhost:11434"; 
-    model = "qwen2.5:3b";
-    temperature = 0.2; // số này tùy chỉnh
-    max_tokens = 512; // tùy
+
+    // linh hoạt model mỗi khi chuyển môi trường giữa máy cá nhân và kaggle (vì kaggle là linux)
+    #ifdef _WIN32
+        model = "qwen2.5:3b"; 
+    #else
+        model = "qwen3.8:27b";
+    #endif
+
+
+    temperature = 0.7; // số này tùy chỉnh
+    max_tokens = 2048; // tùy
 }
 string OllamaClient::getUrl(){
     return base_url;
