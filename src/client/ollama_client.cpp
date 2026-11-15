@@ -14,35 +14,35 @@ OllamaClient::OllamaClient(
     double temp, 
     int tok
 ){
-    base_url = url;
-    model = m;
-    temperature = temp;
-    max_tokens = tok;
+    _base_url = url;
+    _model = m;
+    _temperature = temp;
+    _max_tokens = tok;
 }
 OllamaClient::OllamaClient(){
-    base_url = "http://localhost:11434"; 
+    _base_url = "http://localhost:11434"; 
 
     // linh hoạt model mỗi khi chuyển môi trường giữa máy cá nhân và kaggle (vì kaggle là linux)
     #ifdef _WIN32
-        model = "qwen2.5:3b"; 
+        _model = "qwen2.5:3b"; 
     #else
         model = "qwen3.8:27b";
     #endif
 
-    temperature = 0.7; // số này tùy chỉnh
-    max_tokens = 2048; // tùy
+    _temperature = 0.7; // số này tùy chỉnh
+    _max_tokens = 2048; // tùy
 }
 string OllamaClient::getUrl(){
-    return base_url;
+    return _base_url;
 }
 string OllamaClient::getModel(){
-    return model;
+    return _model;
 }
 double OllamaClient::getTemp(){
-    return temperature;
+    return _temperature;
 }
 int OllamaClient::getTokens(){
-    return max_tokens;
+    return _max_tokens;
 }
 size_t WriteCallback( // libcurl bắt phải có hàm này để viết response, ko cần hiểu logic lắm đâu
     void* contents,   
@@ -67,12 +67,12 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
     nlohmann::json request;
 
     // setup mẫu request mình cần gửi để AI hiểu dc yêu cầu
-    request["model"] = model;
+    request["model"] = _model;
     request["messages"] = messages;
     request["stream"] = false;
     request["tools"] = tools;
-    request["options"]["temperature"] = temperature;
-    request["options"]["num_predict"] = max_tokens;
+    request["options"]["temperature"] = _temperature;
+    request["options"]["num_predict"] = _max_tokens;
     string body = request.dump();
 
     // bắt đầu gửi request 
@@ -82,7 +82,7 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
         return {{"error", "Không thể khởi tạo CURL."}};
     }
 
-    string url = base_url + "/api/chat";
+    string url = _base_url + "/api/chat";
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_POST, 1);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());

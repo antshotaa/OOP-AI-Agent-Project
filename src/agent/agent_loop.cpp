@@ -3,7 +3,7 @@
 #include <iostream>
 
 AgentLoop::AgentLoop(LLMClient& client, ToolRegistry& registry, int maxSteps) 
-        : client(client), registry(registry), maxSteps(maxSteps)
+        : _client(client), _registry(registry), _maxSteps(maxSteps)
 {
 
 } 
@@ -14,10 +14,10 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
         {"content", userInput}
     });
     LoopDetector loopDetector;
-    for (int step = 0; step < maxSteps; step++){ // mỗi step là 1 lần gọi llm
-        nlohmann::json tools = registry.getToolDefinitions();
+    for (int step = 0; step < _maxSteps; step++){ // mỗi step là 1 lần gọi llm
+        nlohmann::json tools = _registry.getToolDefinitions();
 
-        nlohmann::json response = client.chat(history,tools);
+        nlohmann::json response = _client.chat(history,tools);
 
         cout << "DEBUG response: " << response.dump(4) << endl; // dùng cho việc debug
 
@@ -43,7 +43,7 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                     return "Phát hiện có vòng lặp. Ngừng thực thi.";
                 }
                 // chạy tools
-                Tool* tool = registry.getTool(toolName);
+                Tool* tool = _registry.getTool(toolName);
 
                 nlohmann::json result;
 

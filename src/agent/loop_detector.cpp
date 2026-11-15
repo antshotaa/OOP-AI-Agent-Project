@@ -1,18 +1,18 @@
 #include "loop_detector.h"
 
 bool LoopDetector::isLoop(const string& toolName, const nlohmann::json& args){
-    if (!lastCalls.empty()){
-        if (args == lastCalls["arguments"] && toolName == lastCalls["name"]) {
-            currentLoop++;
-            if (currentLoop >= maxLoop){
+    if (!_lastCalls.empty()){
+        if (args == _lastCalls["arguments"] && toolName == _lastCalls["name"]) {
+            _currentLoop++;
+            if (_currentLoop >= _maxLoop){
                 return true;
             }
         }
         else {
-            currentLoop = 1;
+            _currentLoop = 1;
         }
     }
-    lastCalls = {
+    _lastCalls = {
         {"name", toolName},
         {"arguments", args}
     };

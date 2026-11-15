@@ -8,9 +8,9 @@
 using namespace std;
 class AgentLoop {
 private:
-    LLMClient& client;
-    ToolRegistry& registry;
-    int maxSteps;
+    LLMClient& _client;
+    ToolRegistry& _registry;
+    int _maxSteps;
     nlohmann::json runTool(const nlohmann::json& call);
 public:
     AgentLoop(LLMClient& client, ToolRegistry& registry, int maxSteps = 5);

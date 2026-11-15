@@ -13,7 +13,7 @@ struct Skill {
 
 class SkillLoader {
 private:
-    vector<Skill> skills;
+    vector<Skill> _skills;
 
 public:
     void loadSkills(const string& directory);

@@ -2,13 +2,14 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <string>
 #include <sstream>
 
 using namespace std;
 namespace fs = std::filesystem;
 
 void SkillLoader::loadSkills(const string& directory) { // đọc và nạp skill vào bộ nhớ (cụ thể là vào vector skills)
-    skills.clear();
+    _skills.clear();
     if (!fs::exists(directory) || !fs::is_directory(directory)) {
         cout << "ERROR: Đường dẫn không hợp lệ." << endl;
         return;
@@ -57,6 +58,26 @@ void SkillLoader::loadSkills(const string& directory) { // đọc và nạp skil
             }
         }
 
-        skills.push_back(skill);
+        _skills.push_back(skill);
     }
+}
+
+const Skill* SkillLoader::selectSkill(const string& userInput) const {
+    const Skill* bestSkill = nullptr;
+    int maxKeywordCount = 0;
+
+    for (const auto& skill : _skills) {
+        int keywordCount = 0;
+        for (const string& keyword : skill.keywords) {
+            if (userInput.find(keyword) != string::npos) {
+                keywordCount++;
+            }
+        }
+        if (maxKeywordCount < keywordCount) {
+            maxKeywordCount = keywordCount;
+            bestSkill = &skill;
+        }
+    }
+
+    return bestSkill;
 }
