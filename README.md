@@ -27,26 +27,9 @@ The project is being developed incrementally. The current implementation include
 
 The following features and improvements are currently under development:
 
-- **Agent Loop Improvements**
-  - Improve error handling for invalid LLM responses and failed tool executions.
-  - Handle unknown tools gracefully without prematurely terminating the agent loop.
-  - Improve conversation history management for tool calls and tool responses.
-  - Ensure reliable execution of multiple tool calls within a single interaction.
-
-- **Loop Detection**
-  - Refine loop detection logic to identify repetitive tool calls.
-  - Implement and validate both generic repeat and ping-pong loop detection.
-  - Improve loop detection thresholds and termination handling.
-
 - **Additional Tools**
   - Implement additional tools to expand the agent's capabilities.
   - Ensure at least five functional tools are available through the Tool Registry.
-
-- **Skill System**
-  - Implement `SkillLoader` to load Markdown skill files from the `skills/` directory.
-  - Add keyword-based skill selection.
-  - Inject relevant skill instructions into the system prompt before each agent run.
-  - Develop at least three custom skill files.
 
 - **Harness & Evaluation**
   - Implement `HarnessRunner` to manage agent execution and evaluation.
