@@ -17,19 +17,16 @@
 #include "agent/agent_loop.h"
 using namespace std;
 
+
 string loadSystemPrompt(const string& filePath) {
     ifstream file(filePath);
-
     if (!file.is_open()) {
         throw runtime_error("Cannot open system prompt file.");
     }
-
     stringstream buffer;
     buffer << file.rdbuf();
-
     return buffer.str();
 }
-
 
 int main() {
     #ifdef _WIN32
@@ -44,13 +41,18 @@ int main() {
     ToolRegistry registry;
     registry.registerTool(make_unique<Calculator>()); // đăng ký calculator
 
+    // khởi tạo skill loader
+    SkillLoader skillLoader;
+    skillLoader.loadSkills("skills");
+
+    const string systemPrompt = loadSystemPrompt("system_prompt.txt");
     // khởi tạo agent loop và history
-    AgentLoop agent(client, registry);
+    AgentLoop agent(client, registry, skillLoader, systemPrompt);
     nlohmann::json history = nlohmann::json::array();
 
     history.push_back({ // dặn dò AI kỹ hơn cho nó làm việc hẳn hoi
         {"role", "system"},
-        {"content", loadSystemPrompt("system_prompt.txt")}
+        {"content", systemPrompt}
     });
 
     cout << "Bắt đầu cuộc trò chuyện..." << endl;

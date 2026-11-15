@@ -2,8 +2,18 @@
 #include "loop_detector.h"
 #include <iostream>
 
-AgentLoop::AgentLoop(LLMClient& client, ToolRegistry& registry, int maxSteps) 
-        : _client(client), _registry(registry), _maxSteps(maxSteps)
+AgentLoop::AgentLoop(
+    LLMClient& client,
+    ToolRegistry& registry, 
+    SkillLoader& skillLoader, 
+    const string &systemPrompt,
+    int maxSteps) :
+
+    _client(client), 
+    _registry(registry), 
+    _maxSteps(maxSteps), 
+    _skillLoader(skillLoader),
+    _systemPrompt(systemPrompt)
 {
 
 } 
@@ -13,6 +23,20 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
         {"role", "user"},
         {"content", userInput}
     });
+
+    // nhập system prompt vào đầu tiên, 
+    // làm thế này để trả history về trạng thái ban đầu đó là chỉ có system prompt
+    // nhằm xóa đi skill trước đó đã nhập vào
+    history[0]["content"] = _systemPrompt; 
+    const Skill* skill = _skillLoader.selectSkill(userInput); 
+
+    if (skill != nullptr) {
+        // sau đó là nhập skill cần thiết vào
+        history[0]["content"] += "\n\n";
+        history[0]["content"] += "Active Skill:\n";
+        history[0]["content"] += skill->content;
+    }
+    cout << "DEBUG active skill: " << (skill ? skill->name : "None") << endl;
     LoopDetector loopDetector;
     for (int step = 0; step < _maxSteps; step++){ // mỗi step là 1 lần gọi llm
         nlohmann::json tools = _registry.getToolDefinitions();
