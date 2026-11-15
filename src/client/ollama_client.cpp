@@ -26,7 +26,7 @@ OllamaClient::OllamaClient(){
     #ifdef _WIN32
         _model = "qwen2.5:3b"; 
     #else
-        model = "qwen3.8:27b";
+        _model = "qwen3.8:27b";
     #endif
 
     _temperature = 0.7; // số này tùy chỉnh
@@ -87,7 +87,7 @@ nlohmann::json OllamaClient::chat( // nói chuyện với AI
     curl_easy_setopt(curl, CURLOPT_POST, 1);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 120L);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 300L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &answer);
 

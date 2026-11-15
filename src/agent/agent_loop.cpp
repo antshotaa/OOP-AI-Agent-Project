@@ -1,5 +1,6 @@
 #include "agent_loop.h"
 #include "loop_detector.h"
+#include <exception>
 #include <iostream>
 
 AgentLoop::AgentLoop(
@@ -32,8 +33,6 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
 
     if (skill != nullptr) {
         // sau đó là nhập skill cần thiết vào
-        history[0]["content"] += "\n\n";
-        history[0]["content"] += "Active Skill:\n";
         history[0]["content"] += skill->content;
     }
     cout << "DEBUG active skill: " << (skill ? skill->name : "None") << endl;
@@ -42,7 +41,16 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
         nlohmann::json tools = _registry.getToolDefinitions();
 
         nlohmann::json response = _client.chat(history,tools);
-
+        if (response.is_object() && response.contains("error")) {
+            if (response["error"].is_string()) {
+                return "Lỗi từ Ollama: " + response["error"];
+            }
+            return "Ollama trả về lỗi không hợp lệ.";
+        }
+        if (!response.is_object() || !response.contains("message") ||
+            !response["message"].is_object()) {
+            return "Phản hồi từ LLM không hợp lệ.";
+        }
         cout << "DEBUG response: " << response.dump(4) << endl; // dùng cho việc debug
 
         if (response.contains("message") && 
@@ -59,9 +67,23 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
             // có thể có nhiều tool calls trong cùng 1 user input, nên phải duyệt từng cái
             // chẳng hạn người dùng có thể hỏi 66*37 và 1907 + 2262 bằng mấy trong cùng 1 câu
             {
+                // check điều kiện gọi tool thôi, không cần để ý lắm
+                if (!calls[call_number].is_object() ||
+                    !calls[call_number].contains("function") ||
+                    !calls[call_number]["function"].is_object()) {
+                    return "Cấu trúc tool call không hợp lệ.";
+                }
+                const nlohmann::json& function = calls[call_number]["function"];
+
+                if (!function.contains("name") ||
+                    !function["name"].is_string() ||
+                    !function.contains("arguments") ||
+                    !function["arguments"].is_object()) {
+                    return "Tên tool hoặc arguments không hợp lệ.";
+                }
                 // lấy tên và tham số cần thiết để thực thi tools
-                string toolName = calls[call_number]["function"]["name"];
-                nlohmann::json arguments = calls[call_number]["function"]["arguments"];
+                string toolName = function["name"];
+                nlohmann::json arguments = function["arguments"];
 
                 if (loopDetector.isLoop(toolName,arguments)){ // check vòng lặp vô hạn
                     return "Phát hiện có vòng lặp. Ngừng thực thi.";
@@ -71,9 +93,25 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
 
                 nlohmann::json result;
 
-                if (tool) result = tool->exec(arguments);
+                if (tool) {
+                    try {
+                        result = tool->exec(arguments);
+                    }
+                    catch (const exception& e) {
+                        result = {
+                            {"error", e.what()}
+                        };
+                    }
+                    catch (...) {
+                        result = {
+                            {"error", "Unknown exception occurred."}
+                        };
+                    }
+                }
                 else {
-                    return "Không tìm thấy tool: " + toolName;
+                    result = {
+                        {"error", "Không tìm thấy tool: " + toolName}
+                    };
                 }
                 // cout << "DEBUG tool result: " << result.dump(4) << endl;
                 history.push_back({
@@ -81,6 +119,14 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                     {"tool_name", toolName},
                     {"content", result.dump()}
                 });
+                if (result.is_object() && result.contains("error")){
+                    const Skill* recovery = _skillLoader.findSkill("Error Recovery");
+                    if (recovery != nullptr){
+                        history[0]["content"] = history[0]["content"].get<string>() + "\n\nActive Skill: Error Recovery\n" + recovery->content;
+                        cout << "DEBUG: Error Recovery activated." << endl;
+                    }
+                    break;
+                }
             }
         }
         else {
@@ -89,8 +135,34 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                 return "Phản hồi từ LLM không hợp lệ.";
             }
             cout << "DEBUG message: " << response["message"].dump(4) << endl; // dùng cho việc debug
+            if (!response["message"].contains("content") ||
+                !response["message"]["content"].is_string()) {
+                return "Phản hồi từ LLM không có nội dung hợp lệ.";
+            }
             return response["message"]["content"];
         }
     }
-    return "Agent đã đạt giới hạn số bước";
+    // hết số bước thực thi tool, gọi LLM thêm một lần để tổng hợp
+    nlohmann::json finalResponse =
+        _client.chat(history, nlohmann::json::array());
+    if (finalResponse.is_object() && finalResponse.contains("error")) {
+        if (finalResponse["error"].is_string()) {
+            return "Lỗi từ Ollama: " + finalResponse["error"];
+        }
+        return "Ollama trả về lỗi không hợp lệ.";
+    }
+    cout << "DEBUG final response: " << finalResponse.dump(4) << endl;
+
+    if (!finalResponse.is_object() ||
+        !finalResponse.contains("message") ||
+        !finalResponse["message"].is_object()) {
+        return "Phản hồi cuối cùng từ LLM không hợp lệ.";
+    }
+
+    if (!finalResponse["message"].contains("content") ||
+        !finalResponse["message"]["content"].is_string()) {
+        return "LLM không trả về câu trả lời cuối cùng hợp lệ.";
+    }
+
+    return finalResponse["message"]["content"].get<string>();
 }

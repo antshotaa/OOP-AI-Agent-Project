@@ -18,4 +18,5 @@ private:
 public:
     void loadSkills(const string& directory);
     const Skill* selectSkill(const string& task) const;
+    const Skill* findSkill(const string& name) const;
 };

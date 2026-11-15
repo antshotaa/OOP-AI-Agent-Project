@@ -4,114 +4,139 @@
 
 AI Agent Framework is a C++17 project developed as part of an Object-Oriented Programming (OOP) course.
 
-The project aims to build a simplified AI Agent framework from scratch, inspired by existing frameworks such as LangChain and OpenClaw.
+The project aims to build a simplified AI Agent framework from scratch, inspired by frameworks such as LangChain and OpenClaw.
 
-It connects to locally hosted Large Language Models (LLMs) through the Ollama API and provides an extensible tool system that allows an AI Agent to interact with external functionalities.
+It connects to locally hosted Large Language Models (LLMs) through the Ollama API. The framework also provides a tool system that allows an AI Agent to request and execute external functions.
 
-Unlike a traditional chatbot that only generates text, an AI Agent can identify when a tool is needed, request its execution, and use the returned results to generate a response.
+Unlike a traditional chatbot that only generates text, an AI Agent can decide when a tool is needed, request its execution, receive the result, and use that result to continue the conversation.
 
-The main objective is to understand the fundamental architecture and implementation of an AI Agent using C++ and Object-Oriented Programming principles.
+The main objective is to understand the architecture and implementation of an AI Agent using C++ and Object-Oriented Programming principles.
 
 ## 2. Features
 
-The project is being developed incrementally. The current implementation includes the following components:
+### Implemented
 
-- **LLM Client:** Communicate with locally hosted language models through the Ollama API using HTTP requests.
-- **Tool Interface:** Define a common interface for different tools, allowing them to be implemented and executed through a unified structure.
-- **Calculator Tool:** Evaluate mathematical expressions.
-- **Tool Registry:** Register and retrieve available tools by their names.
-- **JSON Processing:** Parse API requests and responses using nlohmann/json.
-- **Error Handling:** Handle API connection errors, invalid JSON responses, and tool execution errors.
+- **LLM Client:** Communicates with locally hosted language models through the Ollama API.
+- **Tool Interface:** Defines a common interface for tools.
+- **Tool Registry:** Registers tools and retrieves them by name.
+- **Calculator Tool:** Evaluates arithmetic expressions.
+- **Agent Loop:** Coordinates communication between the LLM and registered tools.
+- **Multiple Tool Calls:** Processes multiple tool calls returned in one LLM response.
+- **Loop Detection:** Detects repeated calls with the same tool name and arguments.
+- **System Prompt:** Loads the assistant's base instructions from an external text file.
+- **Skill Loader:** Loads Markdown-based Skill files and provides keyword-based Skill selection.
+- **Skill Injection:** Adds the selected Skill's instructions to the system prompt before sending a request to the LLM.
 
-## In Progress
+### In Progress
 
-The following features and improvements are currently under development:
+- **Automatic Error Recovery**
+  - Detect tool execution errors.
+  - Activate the Error Recovery Skill automatically.
+  - Allow the Agent to analyze errors and decide whether recovery is possible.
 
-- **Additional Tools**
-  - Implement additional tools to expand the agent's capabilities.
-  - Ensure at least five functional tools are available through the Tool Registry.
+- **Tool System**
+  - Implement additional tools.
+  - Improve argument validation and tool error reporting.
 
-- **Harness & Evaluation**
-  - Implement `HarnessRunner` to manage agent execution and evaluation.
-  - Add trajectory recording for agent execution steps.
-  - Implement `KeywordEvaluator` and `FunctionalEvaluator`.
-  - Develop benchmark tasks and support batch evaluation with JSON output.
+- **Agent Reliability**
+  - Improve loop detection.
+  - Improve JSON response validation.
+  - Handle failures and edge cases in the Agent Loop.
 
-- **Testing & Reliability**
-  - Expand unit and integration tests.
-  - Improve HTTP error handling, timeout configuration, and JSON response validation in `OllamaClient`.
-  - Test agent behavior across normal execution, tool failures, invalid responses, and loop detection scenarios.
-  
+- **Harness and Evaluation**
+  - Complete `HarnessRunner`.
+  - Implement trajectory recording and evaluators.
+  - Run benchmark tasks and produce evaluation results.
+
+- **Testing**
+  - Add unit and integration tests.
+  - Test normal execution, tool failures, invalid responses, and recovery behavior.
+
 ## 3. Technologies
 
 | Technology | Purpose |
 |---|---|
 | C++17 | Main programming language |
 | Ollama | Local LLM runtime |
-| llama3.2 | Language model |
-| libcurl | HTTP communication with Ollama |
-| nlohmann/json | JSON parsing and manipulation |
+| Qwen | Language model |
+| libcurl | HTTP communication |
+| nlohmann/json | JSON processing |
 | CMake | Build system |
-| vcpkg | C++ dependency management |
+| vcpkg | Windows dependency management |
 | Visual Studio Build Tools | MSVC compiler |
-| Visual Studio Code | Development environment |
 
 ## 4. Project Structure
-
-The project is organized into separate modules to improve maintainability and extensibility.
 
 ```text
 Agent_25120015/
 │
 ├── src/
+│   ├── agent/
+│   │   ├── agent_loop.h
+│   │   ├── agent_loop.cpp
+│   │   ├── loop_detector.h
+│   │   ├── loop_detector.cpp
+│   │   ├── skill_loader.h
+│   │   └── skill_loader.cpp
+│   │
 │   ├── client/
+│   │   ├── llm_client.h
 │   │   ├── ollama_client.h
 │   │   └── ollama_client.cpp
 │   │
 │   ├── tools/
 │   │   ├── tool.h
-│   │   ├── calc_tool.h
-│   │   ├── calc_tool.cpp
 │   │   ├── tool_registry.h
-│   │   └── tool_registry.cpp
+│   │   ├── tool_registry.cpp
+│   │   ├── calc_tool.h
+│   │   └── calc_tool.cpp
 │   │
-│   ├── core/
-│   │   └── (Agent implementation)
+│   ├── harness/
+│   │   ├── harness_runner.h
+│   │   ├── harness_runner.cpp
+│   │   ├── evaluator.h
+│   │   ├── placeholder_evaluator.cpp
+│   │   ├── trajectory.h
+│   │   └── trajectory.cpp
 │   │
 │   └── main.cpp
 │
-├── tests/
+├── skills/
+│   ├── error_recovery.md
+│   ├── task_planner.md
+│   └── placeholder.md
 │
-├── docs/
+├── benchmark/
+│   ├── run_eval.cpp
+│   └── tasks.json
 │
-├── .vscode/
-│
+├── system_prompt.txt
+├── skill_format_instructions.txt
 ├── CMakeLists.txt
 ├── README.md
 └── .gitignore
 ```
 
-*Note: This is a logical representation of the project architecture. Update the tree to match the actual file locations in the repository.*
-
 ### Main Components
 
-- **OllamaClient:** Responsible for sending requests to the Ollama API and receiving model responses.
-- **Tool:** Defines the common interface that all tools must implement.
-- **Calculator:** Implements mathematical expression evaluation.
-- **ToolRegistry:** Manages available tools and provides access to them.
-- **Agent:** Coordinates communication between the LLM and available tools through the Agent Loop.
+- **OllamaClient:** Sends chat requests to Ollama and receives model responses.
+- **Tool:** Abstract interface implemented by individual tools.
+- **ToolRegistry:** Owns registered tools and provides tool definitions to the LLM.
+- **AgentLoop:** Manages the interaction cycle between the user, LLM, and tools.
+- **LoopDetector:** Detects repeated tool calls.
+- **SkillLoader:** Loads Skill files and selects a Skill based on the user's request.
+- **Harness:** Intended to run benchmark tasks and evaluate Agent behavior.
 
 ## 5. Requirements
 
-Before building the project, make sure the following software is installed:
-
-- Windows 10 or later.
-- Visual Studio 2022 Build Tools with the C++ workload.
+- Windows 10 or later, or a compatible Linux environment.
+- C++17 compiler.
 - CMake 3.20 or later.
 - Git.
-- vcpkg.
 - Ollama.
-- A compatible LLM model.
+- A compatible Ollama model.
+- libcurl.
+- nlohmann/json.
 
 ## 6. Installation and Setup
 
@@ -124,7 +149,9 @@ cd Agent_25120015
 
 ### Step 2: Install dependencies
 
-This project uses vcpkg to manage C++ dependencies.
+#### Windows
+
+Install Visual Studio 2022 Build Tools with the C++ workload, CMake, and vcpkg.
 
 Install the required libraries:
 
@@ -133,27 +160,47 @@ vcpkg install curl:x64-windows
 vcpkg install nlohmann-json:x64-windows
 ```
 
-Make sure that vcpkg is installed and available at:
+The current Windows CMake configuration expects vcpkg at:
 
 ```text
 C:/vcpkg
 ```
 
-If vcpkg is installed in another location, adjust the paths in the following commands accordingly.
+If vcpkg is installed elsewhere, update the toolchain path in `CMakeLists.txt`.
+
+#### Linux / Kaggle
+
+Install the required packages:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential cmake libcurl4-openssl-dev nlohmann-json3-dev
+```
 
 ### Step 3: Install and configure Ollama
 
-Download and install Ollama from:
+Install Ollama from:
 
 https://ollama.com/
 
-Download the model:
+The default model is selected in `OllamaClient` according to the operating system:
+
+- Windows: `qwen2.5:3b`
+- Linux: `qwen3.8:27b`
+
+Pull the model configured for your environment. For example:
 
 ```bash
-ollama pull llama3.2
+ollama pull qwen2.5:3b
 ```
 
-Start the Ollama service:
+Or, on Linux:
+
+```bash
+ollama pull qwen3.8:27b
+```
+
+Start the Ollama service if it is not already running:
 
 ```bash
 ollama serve
@@ -165,49 +212,64 @@ The default API endpoint is:
 http://localhost:11434
 ```
 
-Make sure Ollama is running before launching the application.
+Make sure the Ollama service is available before running the application.
 
-### Step 4: Configure the project using CMake
+### Step 4: Configure and build
 
-Open a terminal in the project root directory and run:
-
-```powershell
-cmake -S . -B build-vcpkg `
-  -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-  -DVCPKG_TARGET_TRIPLET=x64-windows
-```
-
-This command configures the project using CMake and tells it to locate dependencies through vcpkg.
-
-### Step 5: Build the project
-
-Compile the project in Debug mode:
+#### Windows
 
 ```powershell
+cmake -S . -B build-vcpkg -DVCPKG_TARGET_TRIPLET=x64-windows
 cmake --build build-vcpkg --config Debug
 ```
 
-After a successful build, the executable will be generated at:
+The executable is generated at:
 
 ```text
 build-vcpkg/Debug/OllamaTest.exe
 ```
 
-### Step 6: Run the application
+#### Linux / Kaggle
 
-Run the executable:
+```bash
+cmake -S . -B build
+cmake --build build --parallel 2
+```
+
+The executable is generated at:
+
+```text
+build/OllamaTest
+```
+
+### Step 5: Run the application
+
+Run the executable from the project root directory. This is important because the application loads `system_prompt.txt` and the `skills/` directory using relative paths.
+
+Windows:
 
 ```powershell
 .\build-vcpkg\Debug\OllamaTest.exe
 ```
 
+Linux:
+
+```bash
+./build/OllamaTest
+```
+
 ## 7. Usage
 
-After launching the application, users can interact with the locally hosted LLM through the terminal.
+After launching the application, select an option from the terminal menu:
 
-The framework is designed to allow the Agent to use registered tools when necessary.
+```text
+1. Trò chuyện với AI
+2. Thoát
+```
 
-### Example: Calculator Tool
+Enter a message when prompted. The Agent sends the request to the LLM and executes registered tools when requested.
+
+### Example: Calculator
 
 User input:
 
@@ -215,74 +277,75 @@ User input:
 Calculate 123 * 456
 ```
 
-Expected tool call from the LLM:
+The LLM may request the Calculator tool with arguments similar to:
 
 ```json
 {
-    "name": "Calculator",
-    "arguments": {
-        "expression": "123*456"
-    }
+    "expression": "123*456"
 }
 ```
-Expected calculation result:
 
-```text
-56088
+The Agent executes the tool and sends its result back to the LLM so it can generate a final response.
+
+### Example: Skill Selection
+
+The project stores Skills as Markdown files in the `skills/` directory.
+
+Each Skill contains metadata and instructions:
+
+```markdown
+---
+name: Task Planner
+keywords: plan, planning, task, organize
+---
+
+Instructions
+- Understand the user's goal.
+- Break complex tasks into manageable steps.
+- Use tools only when necessary.
 ```
 
-*Note: The LLM tool-call request and Calculator implementation are available. The complete Agent Loop, which executes the requested tool and sends its result back to the LLM for a final response, is still under development.*
+The Skill Loader uses the metadata to select a relevant Skill. The selected instructions are added to the system prompt before the LLM request.
+
+Automatic activation of Error Recovery after a tool execution error is currently under development.
 
 ## 8. Object-Oriented Programming Concepts
 
-This project applies the following OOP principles:
-
 ### Encapsulation
 
-Each component encapsulates its own data and operations.
-
-For example, `OllamaClient` handles API communication, while `Calculator` handles mathematical expression evaluation.
+Each component manages its own data and operations. For example, `OllamaClient` handles API communication, while `Calculator` handles arithmetic evaluation.
 
 ### Inheritance
 
-Different tools inherit from a common `Tool` interface, allowing them to share a consistent structure.
+Concrete tools inherit from the abstract `Tool` interface.
 
 ### Polymorphism
 
-Different tool implementations can be accessed and executed through a common interface.
-
-For example, the Agent can work with a `Tool` pointer without needing to know the concrete implementation of each tool.
+The `ToolRegistry` stores tools through `unique_ptr<Tool>`. The Agent can execute different tools through the common interface without depending on their concrete implementations.
 
 ### Abstraction
 
-The framework separates the main responsibilities into independent components:
+The project separates responsibilities into independent components:
 
 - LLM communication.
-- Tool definitions and implementations.
-- Tool management.
-- Agent execution and decision-making.
+- Tool definitions and execution.
+- Tool registration.
+- Agent orchestration.
+- Skill loading and selection.
+- Evaluation infrastructure.
 
-This separation makes the framework easier to maintain and extend.
+## 9. Current Limitations and Future Improvements
 
-## 9. Future Improvements
-
-The following features are planned for future development:
-
-- Complete the Agent Loop and tool execution workflow.
-- Support multiple tool calls in a single interaction.
-- Implement additional tools such as web search and file operations.
+- Add more functional tools.
+- Implement automatic Error Recovery activation.
+- Improve Skill selection and matching.
+- Improve loop detection and Agent step management.
+- Strengthen HTTP and JSON error handling.
+- Complete Harness and Evaluation.
+- Add unit and integration tests.
 - Improve conversation history management.
-- Support multimodal inputs, including images.
-- Improve error handling and logging.
-- Add unit tests and integration tests.
-- Improve the Agent's ability to handle complex tasks.
+- Explore additional capabilities such as file operations and web search.
 
-## 10. Author
-
-**Name:** Nguyễn Thành An
-
-**Student ID:** 25120015
-
-## 11. License
+## 10. License
 
 This project was developed for educational purposes as part of an Object-Oriented Programming course.

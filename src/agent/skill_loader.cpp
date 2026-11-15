@@ -28,7 +28,7 @@ void SkillLoader::loadSkills(const string& directory) { // đọc và nạp skil
         skill.name = entry.path().stem().string();
 
         string line;
-        bool readingContent = false;
+        bool readingContent = true;
 
         while (getline(file, line)) {
             if (line == "---") {
@@ -80,4 +80,14 @@ const Skill* SkillLoader::selectSkill(const string& userInput) const {
     }
 
     return bestSkill;
+}
+
+const Skill* SkillLoader::findSkill(const string& name) const {
+    for (const auto& skill : _skills) {
+        if (skill.name == name) {
+            return &skill;
+        }
+    }
+
+    return nullptr;
 }
