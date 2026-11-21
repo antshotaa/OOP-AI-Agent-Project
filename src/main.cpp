@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <nlohmann/json.hpp>
+#include <filesystem>
+#include <memory>
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -14,9 +16,13 @@
 #include "tools/tool.h"
 #include "tools/tool_registry.h"
 #include "tools/calc_tool.h"
+#include "tools/file_manager.h"
+#include "tools/read_file_tool.h"
 #include "agent/agent_loop.h"
+
 using namespace std;
 
+namespace fs = filesystem;
 
 string loadSystemPrompt(const string& filePath) {
     ifstream file(filePath);
@@ -37,9 +43,14 @@ int main() {
     // khởi tạo ollama
     OllamaClient client;
 
+    // khởi tạo file manager
+    fs::path workspace = fs::current_path();
+    FileManager fileManager(workspace);
     // khởi tạo tool registry
     ToolRegistry registry;
     registry.registerTool(make_unique<Calculator>()); // đăng ký calculator
+    registry.registerTool(make_unique<ReadFileTool>(fileManager));
+
 
     // khởi tạo skill loader
     SkillLoader skillLoader;

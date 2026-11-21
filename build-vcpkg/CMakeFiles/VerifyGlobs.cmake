@@ -13,6 +13,8 @@ set(OLD_GLOB
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/harness/trajectory.cpp"
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/main.cpp"
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/calc_tool.cpp"
+  "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/file_manager.cpp"
+  "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/read_file_tool.cpp"
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/tool_registry.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
