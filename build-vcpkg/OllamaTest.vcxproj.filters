@@ -37,6 +37,9 @@
     <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\tools\tool_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\src\tools\write_file_tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Tran Thi Hong Tham\Downloads\doangaming\Agent_25120015\CMakeLists.txt" />

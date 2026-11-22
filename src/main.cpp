@@ -18,6 +18,7 @@
 #include "tools/calc_tool.h"
 #include "tools/file_manager.h"
 #include "tools/read_file_tool.h"
+#include "tools/write_file_tool.h"
 #include "agent/agent_loop.h"
 
 using namespace std;
@@ -44,13 +45,13 @@ int main() {
     OllamaClient client;
 
     // khởi tạo file manager
-    fs::path workspace = fs::current_path();
+    fs::path workspace = fs::current_path(); // lấy path nằm trong workspace để llm ko đọc file ở ngoài
     FileManager fileManager(workspace);
     // khởi tạo tool registry
     ToolRegistry registry;
     registry.registerTool(make_unique<Calculator>()); // đăng ký calculator
-    registry.registerTool(make_unique<ReadFileTool>(fileManager));
-
+    registry.registerTool(make_unique<ReadFileTool>(fileManager)); // đăng ký tool đọc file
+    registry.registerTool(make_unique<WriteFileTool>(fileManager)); // đăng ký tool sửa file
 
     // khởi tạo skill loader
     SkillLoader skillLoader;

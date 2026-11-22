@@ -16,6 +16,7 @@ set(OLD_GLOB
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/file_manager.cpp"
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/read_file_tool.cpp"
   "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/tool_registry.cpp"
+  "C:/Users/Tran Thi Hong Tham/Downloads/doangaming/Agent_25120015/src/tools/write_file_tool.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

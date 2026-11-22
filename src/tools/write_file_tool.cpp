@@ -20,7 +20,7 @@ nlohmann::json WriteFileTool::parameters() const{
         {"properties", {
             {"path", {
                 {"type", "string"},
-                {"description", "Path of the file write"}
+                {"description", "Path of the file to write"}
             }},
             {"contents", {
                 {"type", "string"},
@@ -32,5 +32,16 @@ nlohmann::json WriteFileTool::parameters() const{
 }
 
 nlohmann::json WriteFileTool::exec(nlohmann::json &args){
-    
+    nlohmann::json result = {
+        {"success", true},
+        {"content", ""},
+        {"error", ""}
+    };
+    string path = args.at("path");
+    string contents = args.at("contents");
+    FileResult fileResult = _fileManager.writeFile(path, contents);
+    result["success"] = fileResult.success;
+    result["content"] = fileResult.content;
+    result["error"] = fileResult.error;
+    return result;
 }

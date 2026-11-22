@@ -113,13 +113,13 @@ string AgentLoop::run(nlohmann::json& history, const string& userInput){
                         {"error", "Không tìm thấy tool: " + toolName}
                     };
                 }
-                // cout << "DEBUG tool result: " << result.dump(4) << endl;
+                cout << "DEBUG tool result: " << result.dump(4) << endl;
                 history.push_back({
                     {"role", "tool"},
                     {"tool_name", toolName},
                     {"content", result.dump()}
                 });
-                if (result.is_object() && result.contains("error")){
+                if (result.is_object() && result.contains("success") && !result["success"].get<bool>()){
                     const Skill* recovery = _skillLoader.findSkill("Error Recovery");
                     if (recovery != nullptr){
                         history[0]["content"] = history[0]["content"].get<string>() + "\n\nActive Skill: Error Recovery\n" + recovery->content;
