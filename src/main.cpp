@@ -19,6 +19,7 @@
 #include "tools/file_manager.h"
 #include "tools/read_file_tool.h"
 #include "tools/write_file_tool.h"
+#include "tools/exec_tool.h"
 #include "agent/agent_loop.h"
 
 using namespace std;
@@ -52,6 +53,7 @@ int main() {
     registry.registerTool(make_unique<Calculator>()); // đăng ký calculator
     registry.registerTool(make_unique<ReadFileTool>(fileManager)); // đăng ký tool đọc file
     registry.registerTool(make_unique<WriteFileTool>(fileManager)); // đăng ký tool sửa file
+    registry.registerTool(make_unique<ExecTool>()); // đăng ký tool chạy lệnh terminal
 
     // khởi tạo skill loader
     SkillLoader skillLoader;
